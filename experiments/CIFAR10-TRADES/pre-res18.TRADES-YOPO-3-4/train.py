@@ -1,9 +1,10 @@
 from config import config, args
 from dataset import create_train_dataset, create_test_dataset
 from network import create_network
+import datetime
 
-from utils.misc import save_args, save_checkpoint, load_checkpoint
-from training.train import eval_one_epoch
+from lib.utils.misc import save_args, save_checkpoint, load_checkpoint
+from lib.training.train import eval_one_epoch
 from loss import  Hamiltonian, CrossEntropyWithWeightPenlty
 from training_function import train_one_epoch, FastGradientLayerOneTrainer
 
@@ -41,6 +42,11 @@ if args.auto_continue:
 if args.resume is not None and os.path.isfile(args.resume):
     now_epoch = load_checkpoint(args.resume, net, optimizer,lr_scheduler)
 
+start_time = datetime.datetime.now()
+log_path = "epoch-vs-time.txt"
+log_file = open(log_path, 'w')
+log_file.write("{} {}\n".format(now_epoch, 0))
+
 while True:
     if now_epoch > config.num_epochs:
         break
@@ -50,9 +56,13 @@ while True:
                                                                        lr_scheduler.get_lr()[0])
     acc, yofoacc = train_one_epoch(net, ds_train, optimizer, criterion, LayerOneTrainer, config.K,
                     DEVICE, descrip_str)
-    acc, advacc = eval_one_epoch(net, ds_val, DEVICE, EvalAttack)
+    # acc, advacc = eval_one_epoch(net, ds_val, DEVICE, EvalAttack)
 
     lr_scheduler.step()
     lyaer_one_optimizer_lr_scheduler.step()
     save_checkpoint(now_epoch, net, optimizer, lr_scheduler,
                     file_name = os.path.join(config.model_dir, 'epoch-{}.checkpoint'.format(now_epoch)))
+    delta = datetime.datetime.now() - start_time
+    duration = delta.days * 24 * 60 + (delta.seconds / 60)  # in minutes
+    log_file.write("{} {}\n".format(now_epoch, duration))
+
