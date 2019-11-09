@@ -1,6 +1,7 @@
 from config import config, args
 from dataset import create_train_dataset, create_test_dataset
 from network import create_network
+import datetime
 
 from lib.utils.misc import save_args, save_checkpoint, load_checkpoint
 from lib.training.train import eval_one_epoch
@@ -56,6 +57,11 @@ if args.auto_continue:
 if args.resume is not None and os.path.isfile(args.resume):
     now_epoch = load_checkpoint(args.resume, net, optimizer,lr_scheduler)
 
+start_time = datetime.datetime.now();
+log_path = "epoch-vs-time.txt"
+log_file = open(log_path, 'w')
+log_file.write("{} {}\n".format(now_epoch, 0))
+
 while True:
     if now_epoch > config.num_epochs:
         break
@@ -75,5 +81,9 @@ while True:
 
     lr_scheduler.step()
     lyaer_one_optimizer_lr_scheduler.step()
+    delta = datetime.datetime.now() - start_time
+    duration = delta.days * 24 * 60 + (delta.seconds / 60)  # in minutes
+    log_file.write("{} {}\n".format(now_epoch, duration))
+    print("Epoch: {}, Duration: {}".format(now_epoch, duration))
     save_checkpoint(now_epoch, net, optimizer, lr_scheduler,
                     file_name = os.path.join(config.model_dir, 'epoch-{}.checkpoint'.format(now_epoch)))
