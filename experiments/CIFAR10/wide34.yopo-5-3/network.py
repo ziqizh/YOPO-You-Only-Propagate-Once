@@ -1,5 +1,5 @@
 import config
-from base_model.wide_resnet import WideResNet
+from lib.base_model.wide_resnet import WideResNet
 
 def create_network():
     return WideResNet(34)

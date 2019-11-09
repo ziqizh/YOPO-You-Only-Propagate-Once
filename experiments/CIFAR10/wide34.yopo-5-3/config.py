@@ -16,7 +16,7 @@ root_path = os.path.join('/', *abs_current_path.split(os.path.sep)[:-3])
 lib_dir = os.path.join(root_path, 'lib')
 add_path(lib_dir)
 
-from training.config import TrainingConfigBase, SGDOptimizerMaker, \
+from lib.training.config import TrainingConfigBase, SGDOptimizerMaker, \
     PieceWiseConstantLrSchedulerMaker, IPGDAttackMethodMaker
 
 class TrainingConfing(TrainingConfigBase):
@@ -24,7 +24,7 @@ class TrainingConfing(TrainingConfigBase):
     lib_dir = lib_dir
 
     num_epochs = 36
-    val_interval = 2
+    val_interval = 0
     weight_decay = 5e-4
 
     inner_iters = 3
