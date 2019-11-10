@@ -3,7 +3,7 @@ from dataset import create_train_dataset, create_test_dataset
 from network import create_network
 import datetime
 
-from lib.utils.misc import save_args, save_checkpoint, load_checkpoint
+from utils.misc import save_args, save_checkpoint, load_checkpoint
 from lib.training.train import eval_one_epoch
 from loss import  Hamiltonian, CrossEntropyWithWeightPenlty
 from training_function import train_one_epoch, FastGradientLayerOneTrainer
