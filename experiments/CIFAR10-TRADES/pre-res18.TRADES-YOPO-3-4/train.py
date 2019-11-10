@@ -19,7 +19,7 @@ net = create_network()
 net.to(DEVICE)
 
 criterion = config.create_loss_function().to(DEVICE)
-optimizer = config.create_optimizer(net.other_layers.parameters())
+optimizer = config.create_optimizer(net.x.parameters())
 lr_scheduler = config.create_lr_scheduler(optimizer)
 
 Hamiltonian_func = Hamiltonian(net.layer_one, config.weight_decay)
