@@ -101,7 +101,7 @@ def train_one_epoch(net, batch_generator, optimizer,
         kl_loss = trades_criterion(F.log_softmax(adv_pred, dim=1),
                                     F.softmax(raw_pred, dim=1)) / data.shape[0]
 
-        loss = clean_loss + kl_loss
+        loss = clean_loss + 6 * kl_loss
         loss.backward()
 
         optimizer.step()
